@@ -180,6 +180,14 @@ int main() {
         all_tests_passed = false;
     }
 
+    std::string encoded_mime_crlf = "Zm9v\r\nYmFy";
+    std::string decoded_mime_crlf = base64_decode(encoded_mime_crlf, true);
+
+    if (decoded_mime_crlf != "foobar") {
+        std::cout << "Failed: base64_decode CRLF(..., true)" << std::endl;
+        all_tests_passed = false;
+    }
+
  // ----------------------------------------------
 
     std::string unpadded_input   = "YWJjZGVmZw"; // Note the 'missing' "=="

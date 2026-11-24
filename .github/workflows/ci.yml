@@ -16,9 +16,6 @@ jobs:
         compiler: [g++, clang++]
         standard: [11, 17]
 
-    env:
-      CXX: ${{ matrix.compiler }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -27,13 +24,11 @@ jobs:
         if: matrix.compiler == 'clang++'
         run: sudo apt-get update && sudo apt-get install -y clang
 
-      - name: Build and test
+      - name: Configure, build, and test with CMake
         run: |
-          make clean
-          make base64-test-${{ matrix.standard }}
-          ./base64-test-${{ matrix.standard }}
-
-      - name: Configure and build with CMake
-        run: |
-          cmake -S . -B build
+          cmake -S . -B build \
+            -DCMAKE_CXX_COMPILER=${{ matrix.compiler }} \
+            -DCMAKE_CXX_STANDARD=${{ matrix.standard }} \
+            -DBUILD_TESTING=ON
           cmake --build build
+          ctest --test-dir build --output-on-failure

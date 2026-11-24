@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  test:
+    name: C++${{ matrix.standard }} / ${{ matrix.compiler }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [g++, clang++]
+        standard: [11, 17]
+
+    env:
+      CXX: ${{ matrix.compiler }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Clang
+        if: matrix.compiler == 'clang++'
+        run: sudo apt-get update && sudo apt-get install -y clang
+
+      - name: Build and test
+        run: |
+          make clean
+          make base64-test-${{ matrix.standard }}
+          ./base64-test-${{ matrix.standard }}
+
+      - name: Configure and build with CMake
+        run: |
+          cmake -S . -B build
+          cmake --build build

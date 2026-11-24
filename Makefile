@@ -1,5 +1,29 @@
 CXX ?= g++
 
+ifeq ($(CXX),clang++)
+WARNINGS=                    \
+   -Werror                   \
+   -Wall                     \
+   -Wextra                   \
+   -pedantic                 \
+   -Wcast-align              \
+   -Wcast-qual               \
+   -Wdisabled-optimization   \
+   -Wformat=2                \
+   -Wmissing-include-dirs    \
+   -Wmissing-declarations    \
+   -Wold-style-cast          \
+   -Woverloaded-virtual      \
+   -Wredundant-decls         \
+   -Wshadow                  \
+   -Wsign-promo              \
+   -Wstrict-overflow=5       \
+   -Wundef                   \
+   -Wno-unused               \
+   -Wno-variadic-macros      \
+   -Wno-parentheses          \
+   -fdiagnostics-show-option
+else
 WARNINGS=                    \
    -Werror                   \
    -Wall                     \
@@ -27,6 +51,7 @@ WARNINGS=                    \
    -Wno-variadic-macros      \
    -Wno-parentheses          \
    -fdiagnostics-show-option
+endif
 
 test: base64-test-11 base64-test-17
 	./base64-test-11

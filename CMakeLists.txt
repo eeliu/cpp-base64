@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 project(base64)
 
+option(BASE64_ENABLE_WARNINGS "Enable strict warnings for base64 targets" OFF)
+
 set(BASE64_WARNING_FLAGS
     -Werror
     -Wall
@@ -40,7 +42,9 @@ add_library(base64 STATIC
     base64.cpp
 )
 
-target_compile_options(base64 PRIVATE ${BASE64_WARNING_FLAGS})
+if(BASE64_ENABLE_WARNINGS)
+    target_compile_options(base64 PRIVATE ${BASE64_WARNING_FLAGS})
+endif()
 
 target_include_directories(base64 PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
@@ -52,6 +56,8 @@ include(CTest)
 if(BUILD_TESTING)
     add_executable(base64-test test.cpp)
     target_link_libraries(base64-test PRIVATE base64)
-    target_compile_options(base64-test PRIVATE ${BASE64_WARNING_FLAGS})
+    if(BASE64_ENABLE_WARNINGS)
+        target_compile_options(base64-test PRIVATE ${BASE64_WARNING_FLAGS})
+    endif()
     add_test(NAME base64-test COMMAND base64-test)
 endif()

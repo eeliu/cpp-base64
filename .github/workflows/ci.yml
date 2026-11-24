@@ -29,6 +29,7 @@ jobs:
           cmake -S . -B build \
             -DCMAKE_CXX_COMPILER=${{ matrix.compiler }} \
             -DCMAKE_CXX_STANDARD=${{ matrix.standard }} \
+            -DBASE64_ENABLE_WARNINGS=ON \
             -DBUILD_TESTING=ON
           cmake --build build
           ctest --test-dir build --output-on-failure

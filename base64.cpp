@@ -172,7 +172,9 @@ static std::string decode(String const& encoded_string, bool remove_linebreaks) 
 
        std::string copy(encoded_string);
 
-       copy.erase(std::remove(copy.begin(), copy.end(), '\n'), copy.end());
+       copy.erase(std::remove_if(copy.begin(), copy.end(), [](char c) {
+          return c == '\r' || c == '\n';
+       }), copy.end());
 
        return base64_decode(copy, false);
     }

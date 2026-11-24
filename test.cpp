@@ -180,6 +180,14 @@ int main() {
         all_tests_passed = false;
     }
 
+    std::string encoded_mime_crlf = "Zm9v\r\nYmFy";
+    std::string decoded_mime_crlf = base64_decode(encoded_mime_crlf, true);
+
+    if (decoded_mime_crlf != "foobar") {
+        std::cout << "Failed: base64_decode CRLF(..., true)" << std::endl;
+        all_tests_passed = false;
+    }
+
  // ----------------------------------------------
 
     std::string unpadded_input   = "YWJjZGVmZw"; // Note the 'missing' "=="
@@ -245,14 +253,16 @@ int main() {
  // Test the string_view interface (which required C++17)
  //
     std::string_view sv_orig    = "foobarbaz";
-    std::string_view sv_encoded = base64_encode(sv_orig);
+    std::string encoded_view_result = base64_encode(sv_orig);
+    std::string_view sv_encoded = encoded_view_result;
 
     if (sv_encoded != "Zm9vYmFyYmF6") {
        std::cout << "Failed to encode with string_view" << std::endl;
        all_tests_passed = false;
     }
 
-    std::string_view sv_decoded = base64_decode(sv_encoded);
+    std::string decoded_view_result = base64_decode(sv_encoded);
+    std::string_view sv_decoded = decoded_view_result;
 
     if (sv_decoded != sv_orig) {
        std::cout << "Failed to decode with string_view" << std::endl;
